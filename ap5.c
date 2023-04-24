@@ -99,8 +99,8 @@ void heapify(char **arr, int size_arr, int idx, char *key, int key_len)
 char *extract_max_from_heap(char **arr, int size_arr, char *key, int key_len)
 {
     char *max = arr[0];
-    char *last = arr[size_arr - 1];
     size_arr--;
+    char *last = arr[size_arr];
     arr[0] = last;
 
     heapify(arr, size_arr, 0, key, key_len);
@@ -123,6 +123,7 @@ char **merge_sort(char **arr, int size_arr, char *key, int key_len)
     {
         sorted[builder] = extract_max_from_heap(arr, size_arr, key, key_len);
         builder--;
+        size_arr--;
     }
 
     return sorted;
@@ -170,10 +171,6 @@ int main()
         }
         words[i] = bufword;
     }
-
-    // sanity check
-    printf("sanity check\n");
-    print_arr(words, len_words);
 
     words = merge_sort(words, len_words, key, len_key);
 
