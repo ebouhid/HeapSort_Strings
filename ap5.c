@@ -57,9 +57,9 @@ int greater_than(char *a, char *b, char *key, int key_len)
 
     // caso o laço acima acabe, definimos como menor a string de menor tamanho
     if (len_a < len_b)
-        return len_a;
+        return 0;
 
-    return len_b;
+    return 1;
 }
 
 void swap(char **arr, int pos_a, int pos_b)
