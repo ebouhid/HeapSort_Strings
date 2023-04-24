@@ -39,14 +39,6 @@ int greater_than(char *a, char *b, char *key, int key_len)
         int rank_a = get_char_ranking(a[i], key, key_len);
         int rank_b = get_char_ranking(b[i], key, key_len);
 
-        // printf("a = %c | rank_a = %d\n", a[i], rank_a);
-        // printf("b = %c | rank_b = %d\n", b[i], rank_b);
-
-        // if (rank_a == -1 || rank_b == -1)
-        // {
-        //     return -1;
-        // }
-
         if (rank_a > rank_b)
             return 1;
         else if (rank_a < rank_b)
@@ -55,7 +47,6 @@ int greater_than(char *a, char *b, char *key, int key_len)
         i++;
     }
 
-    // caso o laço acima acabe, definimos como menor a string de menor tamanho
     if (len_a < len_b)
         return 0;
 
@@ -78,11 +69,14 @@ void heapify(char **arr, int size_arr, int idx, char *key, int key_len)
     int right_idx = 2 * idx + 2;
 
     // printf("is %s > %s?\n", arr[left_idx], arr[idx]);
+    // printf("arr[idx] = %s\n", arr[idx]);
+    // printf("left = %d\n", left_idx);
+    // printf("right = %d\n", right_idx);
 
-    if (left_idx < size_arr && greater_than(arr[left_idx], arr[idx], key, key_len))
+    if (left_idx < size_arr && greater_than(arr[left_idx], arr[largest_string_idx], key, key_len))
         largest_string_idx = left_idx;
 
-    if (right_idx < size_arr && greater_than(arr[right_idx], arr[idx], key, key_len))
+    if (right_idx < size_arr && greater_than(arr[right_idx], arr[largest_string_idx], key, key_len))
         largest_string_idx = right_idx;
 
     // printf("largest_string_idx = %d | idx = %d\n", largest_string_idx, idx);
@@ -99,11 +93,10 @@ void heapify(char **arr, int size_arr, int idx, char *key, int key_len)
 char *extract_max_from_heap(char **arr, int size_arr, char *key, int key_len)
 {
     char *max = arr[0];
-    size_arr--;
-    char *last = arr[size_arr];
+    char *last = arr[size_arr - 1];
     arr[0] = last;
 
-    heapify(arr, size_arr, 0, key, key_len);
+    heapify(arr, size_arr - 1, 0, key, key_len);
 
     return max;
 }
@@ -111,10 +104,17 @@ char *extract_max_from_heap(char **arr, int size_arr, char *key, int key_len)
 char **merge_sort(char **arr, int size_arr, char *key, int key_len)
 {
     // building max heap
-    for (int i = size_arr / 2 - 1; i >= 0; i--)
+    for (int i = size_arr / 2; i >= 0; i--)
     {
         heapify(arr, size_arr, i, key, key_len);
     }
+
+    // printf("initial max heap: ");
+    // for (int k = 0; k < size_arr; k++)
+    // {
+    //     printf("%s ", arr[k]);
+    // }
+    // printf("\n");
 
     int builder = size_arr - 1;
     char **sorted = (char **)malloc(size_arr * sizeof(char *));
@@ -151,6 +151,10 @@ int main()
         scanf("%c", &key[i]);
     }
 
+    while ((c = getchar()) != '\n' && c != EOF)
+    {
+        // do nothing
+    }
     // create string array
     char **words = (char **)malloc(len_words * sizeof(char *));
 
