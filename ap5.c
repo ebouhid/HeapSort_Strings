@@ -4,6 +4,15 @@
 
 #define WORDSIZE 32
 
+/*
+print_arr(char **arr, int len)
+parameters:
+- arr: string array to be printed (char**)
+- len: size of arr (int)
+
+returns:
+none
+*/
 void print_arr(char **arr, int len)
 {
     for (int i = 0; i < len; i++)
@@ -15,6 +24,16 @@ void print_arr(char **arr, int len)
     return;
 }
 
+/*
+get_char_ranking(char character, char *key, int key_len)
+parameters:
+- character: character whose ranking is desired to know (char)
+- key: array of characters in the desired lexicographic order (char*)
+- key_len: lenght of "key" array
+
+returns:
+* character ranking
+*/
 int get_char_ranking(char character, char *key, int key_len)
 {
     int i = 0;
@@ -28,6 +47,17 @@ int get_char_ranking(char character, char *key, int key_len)
     return -1;
 }
 
+/*
+greater_than(char *a, char *b, char *key, int key_len)
+parameters:
+- a, b: strings to be compared(char*)
+- key: array of characters in the desired lexicographic order (char*)
+- key_len: length of "key" array
+
+returns:
+* 1 if a is considered greater than b according to the supplied lexicographic order or a equals b
+* 0 otherwise
+*/
 int greater_than(char *a, char *b, char *key, int key_len)
 {
     int len_a = strlen(a);
@@ -53,6 +83,16 @@ int greater_than(char *a, char *b, char *key, int key_len)
     return 1;
 }
 
+/*
+swap(char **arr, int pos_a, int pos_b)
+parameters:
+- arr: array of strings in which the swap will occur (char**)
+- pos_a: index of first element (int)
+- pos_b: index of second element (int)
+
+returns:
+none
+*/
 void swap(char **arr, int pos_a, int pos_b)
 {
     char *aux = arr[pos_a];
@@ -62,24 +102,29 @@ void swap(char **arr, int pos_a, int pos_b)
     return;
 }
 
+/*
+heapify(char **arr, int size_arr, int idx, char *key, int key_len)
+parameters:
+- arr: array of strings to be heapified (char**)
+- size_arr: size of arr (int)
+- idx: index of arr to be heapified (int)
+- key: array of characters in the desired lexicographic order (char*)
+- key_len: length of "key" array (char*)
+
+returns:
+none
+*/
 void heapify(char **arr, int size_arr, int idx, char *key, int key_len)
 {
     int largest_string_idx = idx;
     int left_idx = 2 * idx + 1;
     int right_idx = 2 * idx + 2;
 
-    // printf("is %s > %s?\n", arr[left_idx], arr[idx]);
-    // printf("arr[idx] = %s\n", arr[idx]);
-    // printf("left = %d\n", left_idx);
-    // printf("right = %d\n", right_idx);
-
     if (left_idx < size_arr && greater_than(arr[left_idx], arr[largest_string_idx], key, key_len))
         largest_string_idx = left_idx;
 
     if (right_idx < size_arr && greater_than(arr[right_idx], arr[largest_string_idx], key, key_len))
         largest_string_idx = right_idx;
-
-    // printf("largest_string_idx = %d | idx = %d\n", largest_string_idx, idx);
 
     if (largest_string_idx != idx)
     {
@@ -90,6 +135,16 @@ void heapify(char **arr, int size_arr, int idx, char *key, int key_len)
     return;
 }
 
+/*
+extract_max_from_heap(char **arr, int size_arr, char *key, int key_len)
+parameters:
+- arr: array of strings from which the maximum element will be extracted (char**)
+- key: array of characters in the desired lexicographic order (char*)
+- key_len: length of "key" array (char*)
+
+returns:
+* max element from arr (char)
+*/
 char *extract_max_from_heap(char **arr, int size_arr, char *key, int key_len)
 {
     char *max = arr[0];
@@ -101,6 +156,16 @@ char *extract_max_from_heap(char **arr, int size_arr, char *key, int key_len)
     return max;
 }
 
+/*
+extract_max_from_heap(char **arr, int size_arr, char *key, int key_len)
+parameters:
+- arr: array of strings from which the maximum element will be extracted (char**)
+- key: array of characters in the desired lexicographic order (char*)
+- key_len: length of "key" array (char*)
+
+returns:
+* sorted: pointer to sorted array
+*/
 char **merge_sort(char **arr, int size_arr, char *key, int key_len)
 {
     // building max heap
@@ -108,13 +173,6 @@ char **merge_sort(char **arr, int size_arr, char *key, int key_len)
     {
         heapify(arr, size_arr, i, key, key_len);
     }
-
-    // printf("initial max heap: ");
-    // for (int k = 0; k < size_arr; k++)
-    // {
-    //     printf("%s ", arr[k]);
-    // }
-    // printf("\n");
 
     int builder = size_arr - 1;
     char **sorted = (char **)malloc(size_arr * sizeof(char *));
@@ -125,6 +183,9 @@ char **merge_sort(char **arr, int size_arr, char *key, int key_len)
         builder--;
         size_arr--;
     }
+
+    // free up arr
+    free(arr);
 
     return sorted;
 }
@@ -179,6 +240,18 @@ int main()
     words = merge_sort(words, len_words, key, len_key);
 
     print_arr(words, len_words);
+
+    // free the memory for each string in words
+    for (int i = 0; i < len_words; i++)
+    {
+        free(words[i]);
+    }
+
+    // free memory for words
+    free(words);
+
+    // free memory for key
+    free(key);
 
     return 0;
 }
